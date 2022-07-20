@@ -17,14 +17,19 @@ const Part = (props) => {
   );
 };
 
-const Total = (props) => {
-    console.log("Total props: " + props.parts)
-    return (
-      <div>
-        <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
-      </div>
-    )
-  }
+const Total = ({ parts }) => {
+  console.log("Total props: ", parts);
+  const total = parts.reduce((previousVal, currentVal) => {
+    console.log("Previous value: ", previousVal.exercises);
+    console.log("Current value: ", currentVal.exercises);
+    return (previousVal += currentVal.exercises);
+  }, 0);
+  return (
+    <div>
+      <p>Number of exercises {total}</p>
+    </div>
+  );
+};
 
 const Content = (props) => {
   console.log("Loading content props...", props.parts);
