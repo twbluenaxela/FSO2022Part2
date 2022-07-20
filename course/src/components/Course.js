@@ -17,6 +17,15 @@ const Part = (props) => {
   );
 };
 
+const Total = (props) => {
+    console.log("Total props: " + props.parts)
+    return (
+      <div>
+        <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
+      </div>
+    )
+  }
+
 const Content = (props) => {
   console.log("Loading content props...", props.parts);
   return (
@@ -33,6 +42,7 @@ const Course = ({ course }) => {
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   );
 };
