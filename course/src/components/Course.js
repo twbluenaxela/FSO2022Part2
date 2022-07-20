@@ -3,7 +3,6 @@ import Header from "./Header";
 import Total from "./Total";
 import Content from "./Content";
 
-
 const Course = ({ courses }) => {
   console.log("Loading courses...", courses);
   return (
