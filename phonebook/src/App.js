@@ -107,7 +107,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter setFilter={setFilter} />
-      <h2>Add to phonebook</h2>
+      <h3>Add to phonebook</h3>
       <PersonForm
         persons={persons}
         setNewName={setNewName}
@@ -116,7 +116,7 @@ const App = () => {
         newNumber={newNumber}
         setPersons={setPersons}
       />
-      <h2>Numbers</h2>
+      <h3>Numbers</h3>
       <Persons persons={persons} filter={filter}/>
     </div>
   );
