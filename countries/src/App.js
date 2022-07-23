@@ -23,7 +23,7 @@ const Country = ({ country }) => {
       <h3>languages</h3>
       <ul>
         {Object.values(country.languages).map((language) => {
-          return <li>{language}</li>;
+          return <li key={language}>{language}</li>;
         })}
       </ul>
       <img src={country.flags.png} />
@@ -31,7 +31,25 @@ const Country = ({ country }) => {
   );
 };
 
+const CountryListItem = ({ country }) => {
+  const [show, setShow] = useState(false);
+  const handleToggle = (e) => {
+    setShow(!show);
+  };
+
+  return (
+    <div key={country.cca2}>
+      <p>{country.name.common}</p>
+      <button id={country.name.common} onClick={handleToggle} value={country}>
+        show
+      </button>
+      <div>{show ? <Country country={country} /> : ""}</div>
+    </div>
+  );
+};
+
 const Countries = ({ countries, filter }) => {
+
   const countriesToShow = filter
     ? countries.filter((country) =>
         country.name.common.toLowerCase().includes(filter.toLowerCase())
@@ -52,7 +70,7 @@ const Countries = ({ countries, filter }) => {
         <Country country={countriesToShow[0]} />
       ) : amountOfCountriesLessThan10 ? (
         countriesToShow.map((country) => {
-          return <p key={country.name.common}>{country.name.common}</p>;
+          return <CountryListItem country={country} />;
         })
       ) : (
         "Too many matches, try another filter."
