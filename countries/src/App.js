@@ -14,6 +14,21 @@ const CountriesFilter = ({ setFilter }) => {
 };
 
 const Country = ({ country }) => {
+
+  //for more information on formatting, see this link https://github.com/chubin/wttr.in#one-line-output
+
+  const [weather, setWeather] = useState([])
+  const weatherApiUrl = "http://wttr.in/"
+  const url = `https://wttr.in/${country.capital}?format=3`
+  useEffect(() => {
+    axios.get(url)
+    .then(response => {
+      const weatherData = response.data
+      console.log("Received weather data!", weatherData)
+      setWeather(weatherData)
+    })
+  },[])
+
   console.log("Country: ", country);
   return (
     <div key={country.name.common}>
@@ -27,6 +42,8 @@ const Country = ({ country }) => {
         })}
       </ul>
       <img src={country.flags.png} />
+      <h2>Weather in {country.capital}</h2>
+      {weather ? weather : ""}
     </div>
   );
 };
@@ -84,6 +101,9 @@ function App() {
   const [filter, setFilter] = useState("");
 
   const restCountriesUrl = "https://restcountries.com/v3.1/all";
+
+  // https://www.reddit.com/r/AutoHotkey/comments/unspt6/update_text_file_based_on_weather_is_it_possible/
+  
 
   useEffect(() => {
     axios.get(restCountriesUrl).then((response) => {
