@@ -1,14 +1,29 @@
-import { useState } from 'react'
+import axios from 'axios'
+import { useState, useEffect } from 'react'
 import Note from './components/Note'
 
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes)
-  const [newNote, setNewNote] = useState(
-    'a new note...'
-  )
+const App = () => {
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
 
+  const gitpodBackendUrl =
+  "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
+
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
+
+  const hook = () => {
+    console.log('effect');
+    axios
+    .get(gitpodBackendUrl + "/notes")
+    .then(response => {
+      console.log('promise fulfilled')
+      setNotes(response.data)
+    })
+  }
+
+  useEffect(hook, [])
+  console.log('render', notes.length, 'notes');
 
   const addNote = (event) => {
     event.preventDefault();
