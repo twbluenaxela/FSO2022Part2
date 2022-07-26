@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from 'axios'
+import phonebookServices from './services/persons'
 
 const gitpodBackendUrl = "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io"
 
@@ -69,11 +70,9 @@ const PersonForm = ({
       alert(`${newName} is already added to phonebook`);
     } else {
       const nameObject = { name: newName, number: newNumber };
-      axios
-      .post(gitpodBackendUrl + '/persons', nameObject)
-      .then(response => setPersons(persons.concat(response.data)))
-
-      // setPersons(persons.concat(nameObject));
+      phonebookServices
+      .create(nameObject)
+      .then(receivedPersons => setPersons(persons.concat(receivedPersons)))
       setNewName("");
       setNewNumber("");
     }
@@ -111,11 +110,9 @@ const App = () => {
 
   useEffect(()=>{
     console.log("loading...")
-    axios.get(gitpodBackendUrl + "/persons")
-    .then(response => {
-      console.log('promise fulfilled', response.data)
-      setPersons(response.data)
-    })
+    phonebookServices
+    .getAll()
+    .then(receivedPersons => setPersons(receivedPersons))
   },[])
 
   return (
