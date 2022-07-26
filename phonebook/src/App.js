@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from 'axios'
 
+const gitpodBackendUrl = "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io"
+
 const Persons = ({ persons, filter }) => {
 
   const numbersToShow = filter
@@ -38,6 +40,8 @@ const PersonForm = ({
   setNewNumber,
   setPersons,
 }) => {
+
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -65,7 +69,11 @@ const PersonForm = ({
       alert(`${newName} is already added to phonebook`);
     } else {
       const nameObject = { name: newName, number: newNumber };
-      setPersons(persons.concat(nameObject));
+      axios
+      .post(gitpodBackendUrl + '/persons', nameObject)
+      .then(response => setPersons(persons.concat(response.data)))
+
+      // setPersons(persons.concat(nameObject));
       setNewName("");
       setNewNumber("");
     }
@@ -99,7 +107,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
-  const gitpodBackendUrl = "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io"
+  
 
   useEffect(()=>{
     console.log("loading...")
