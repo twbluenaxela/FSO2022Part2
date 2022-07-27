@@ -4,24 +4,36 @@ import phonebookServices from "./services/persons";
 const gitpodBackendUrl =
   "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
 
-const Notification = ({message}) => {
+const Notification = ({message, type}) => {
   const successStyle = {
     color: 'green',
     background: 'lightgray',
     fontSize: '20',
     borderStyle: 'solid',
-    borderRadius: '10px',
+    borderRadius: '5px',
     padding: '20',
     marginBottom: '10'
   }
+  const errorStyle = {
+    color: 'red',
+    background: 'lightgray',
+    fontSize: '20',
+    borderStyle: 'solid',
+    borderRadius: '5px',
+    padding: '20',
+    marginBottom: '10'
+  }
+
+  const styleToSet = type === 'success' ? successStyle : errorStyle
+
   return (
-    <div style={successStyle}>
+    <div style={styleToSet}>
       {message}
     </div>
   )
 }
 
-const PersonsList = ({ persons, filter, setPersons }) => {
+const PersonsList = ({ persons, filter, setPersons, setSuccessMessage, setErrorMessage }) => {
   console.log("Persons prop: ", persons);
   console.log("Filter prop ", filter);
 
@@ -46,8 +58,18 @@ const PersonsList = ({ persons, filter, setPersons }) => {
             return (Number(person.id) !== Number(id));
           })
         );
+        setSuccessMessage(`Successfully deleted ${name} from server`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 3000)
         // console.log("Persons after filtering...", persons);
-      });
+      })
+      .catch(error => {
+        setErrorMessage(`Information of ${name} has already been removed from server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
+      })
     }
   };
 
@@ -174,6 +196,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     console.log("loading...");
@@ -185,7 +208,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {successMessage && (<Notification message={successMessage} />)}
+      {successMessage && (<Notification message={successMessage} type={'success'} />)}
+      {errorMessage && (<Notification message={errorMessage} type={'error'} />)}
       <Filter setFilter={setFilter} />
       <h3>Add to phonebook</h3>
       <PersonForm
@@ -198,7 +222,12 @@ const App = () => {
         setSuccessMessage={setSuccessMessage}
       />
       <h3>Numbers</h3>
-      {persons && (<PersonsList persons={persons} filter={filter} setPersons={setPersons} />) }
+      {persons && (<PersonsList 
+      persons={persons} 
+      filter={filter} 
+      setPersons={setPersons}
+      setErrorMessage={setErrorMessage}
+      setSuccessMessage={setSuccessMessage} />) }
 
     </div>
   );
