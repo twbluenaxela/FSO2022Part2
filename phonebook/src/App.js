@@ -1,22 +1,59 @@
 import { useState, useEffect } from "react";
-import axios from 'axios'
-import phonebookServices from './services/persons'
+import phonebookServices from "./services/persons";
 
-const gitpodBackendUrl = "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io"
+const gitpodBackendUrl =
+  "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
 
-const Persons = ({ persons, filter }) => {
+const PersonsList = ({ persons, filter, setPersons }) => {
+  console.log("Persons prop: ", persons);
+  console.log("Filter prop ", filter);
 
   const numbersToShow = filter
-    ? persons.filter((person) =>
-        person.name.toLowerCase().includes(filter.toLowerCase())
-      )
-    : persons;
+      ? persons.filter((person) =>
+          person.name.toLowerCase().includes(filter.toLowerCase())
+        )
+      : persons
+
+  const handleDelete = (event) => {
+    event.preventDefault();
+    const id = event.target.id;
+    const name = event.target.name
+    if(window.confirm(`Delete ${name} ?`)){
+      phonebookServices.remove(id).then((response) => {
+        // console.log("Deleting...", id);
+        setPersons(
+          persons.filter((person) => {
+            // console.log("Person id: ", person.id);
+            // console.log("ID to delete: ", id);
+            // if(Number(person.id) == id){console.log("Bingo!");}
+            return (Number(person.id) !== Number(id));
+          })
+        );
+        // console.log("Persons after filtering...", persons);
+      });
+    }
+  };
 
   return (
     <div>
       {numbersToShow.map((person) => {
-        return <p key={person.name}>{`${person.name} ${person.number}`}</p>;
+        return (
+          <div key={person.id}>
+            <Person person={person}/>
+            <button id={person.id} name={person.name} onClick={handleDelete}>
+              delete
+            </button>
+          </div>
+        );
       })}
+    </div>
+  );
+};
+
+const Person = ({ person }) => {
+  return (
+    <div>
+      <p>{`${person.name} ${person.number}`}</p>
     </div>
   );
 };
@@ -41,8 +78,6 @@ const PersonForm = ({
   setNewNumber,
   setPersons,
 }) => {
-
-
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -71,8 +106,8 @@ const PersonForm = ({
     } else {
       const nameObject = { name: newName, number: newNumber };
       phonebookServices
-      .create(nameObject)
-      .then(receivedPersons => setPersons(persons.concat(receivedPersons)))
+        .create(nameObject)
+        .then((receivedPersons) => setPersons(persons.concat(receivedPersons)));
       setNewName("");
       setNewNumber("");
     }
@@ -106,14 +141,12 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
-  
-
-  useEffect(()=>{
-    console.log("loading...")
+  useEffect(() => {
+    console.log("loading...");
     phonebookServices
-    .getAll()
-    .then(receivedPersons => setPersons(receivedPersons))
-  },[])
+      .getAll()
+      .then((receivedPersons) => setPersons(receivedPersons));
+  }, []);
 
   return (
     <div>
@@ -129,7 +162,8 @@ const App = () => {
         setPersons={setPersons}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} filter={filter}/>
+      {persons && (<PersonsList persons={persons} filter={filter} setPersons={setPersons} />) }
+
     </div>
   );
 };
