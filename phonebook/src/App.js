@@ -4,6 +4,23 @@ import phonebookServices from "./services/persons";
 const gitpodBackendUrl =
   "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
 
+const Notification = ({message}) => {
+  const successStyle = {
+    color: 'green',
+    background: 'lightgray',
+    fontSize: '20',
+    borderStyle: 'solid',
+    borderRadius: '10px',
+    padding: '20',
+    marginBottom: '10'
+  }
+  return (
+    <div style={successStyle}>
+      {message}
+    </div>
+  )
+}
+
 const PersonsList = ({ persons, filter, setPersons }) => {
   console.log("Persons prop: ", persons);
   console.log("Filter prop ", filter);
@@ -77,6 +94,7 @@ const PersonForm = ({
   setNewName,
   setNewNumber,
   setPersons,
+  setSuccessMessage,
 }) => {
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -121,10 +139,15 @@ const PersonForm = ({
         .then((receivedPersons) => setPersons(persons.concat(receivedPersons)));
       setNewName("");
       setNewNumber("");
+      setSuccessMessage(`Added ${nameObject.name}`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 3000)
     }
   };
   return (
     <div>
+      
       <form onSubmit={addName}>
         <div>
           name: <input onChange={handleNameChange} />
@@ -150,6 +173,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [successMessage, setSuccessMessage] = useState('')
 
   useEffect(() => {
     console.log("loading...");
@@ -161,6 +185,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {successMessage && (<Notification message={successMessage} />)}
       <Filter setFilter={setFilter} />
       <h3>Add to phonebook</h3>
       <PersonForm
@@ -170,6 +195,7 @@ const App = () => {
         newName={newName}
         newNumber={newNumber}
         setPersons={setPersons}
+        setSuccessMessage={setSuccessMessage}
       />
       <h3>Numbers</h3>
       {persons && (<PersonsList persons={persons} filter={filter} setPersons={setPersons} />) }
