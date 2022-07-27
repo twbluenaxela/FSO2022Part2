@@ -101,8 +101,19 @@ const PersonForm = ({
        * expect it to be. It's the value you can see with your eyes that is in the input name field.
        */
     }
-    if (persons.some((element) => element.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if (persons.some((person) => person.name === newName)) {
+      // alert();
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number
+      with a new one?`)){
+        const foundPerson = persons.find(p => p.name === newName)
+        console.log("Found person: ", foundPerson);
+        const changedPerson = {...foundPerson, number: newNumber}
+        phonebookServices
+        .update(foundPerson.id, changedPerson)
+        .then((receivedPerson) => {
+          setPersons(persons.map(person => person.id !== foundPerson.id ? person : receivedPerson))
+        })
+      }
     } else {
       const nameObject = { name: newName, number: newNumber };
       phonebookServices
@@ -112,7 +123,6 @@ const PersonForm = ({
       setNewNumber("");
     }
   };
-
   return (
     <div>
       <form onSubmit={addName}>
