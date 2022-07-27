@@ -18,6 +18,7 @@ const update = (id, newObject) => {
 
 const remove = (id) => {
     const request = axios.delete(`${baseUrl}/${id}`)
+    //this sends back a blank array. just ignore the response when handling it
     return request.then(response => response.data)
 }
 
