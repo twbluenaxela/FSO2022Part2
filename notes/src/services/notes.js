@@ -1,5 +1,8 @@
 import axios from 'axios'
-const baseUrl = "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io/notes"
+
+const herokuBackendUrl = "https://warm-cove-75015.herokuapp.com/api/notes"
+//old url "https://3001-twbluenaxel-fso2022part-rlkoupq6edq.ws-us54.gitpod.io/api/notes"
+const baseUrl = "https://warm-cove-75015.herokuapp.com/api/notes"
 
 const getAll = () => {
     const request = axios.get(baseUrl)

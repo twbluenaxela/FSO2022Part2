@@ -40,16 +40,19 @@ const App = () => {
   const gitpodBackendUrl =
   "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
 
+  const notesBackend = "https://3001-twbluenaxel-fso2022part-rlkoupq6edq.ws-us54.gitpod.io/api/notes"
+  const herokuBackendUrl = "https://warm-cove-75015.herokuapp.com/api/notes"
+
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
   // console.log("Notes to show:  ", notesToShow)
 
 
   useEffect(() => {
-    noteService
-    .getAll()
-    .then(initialNotes => {
-      setNotes(initialNotes)
-    })
+    axios
+      .get(herokuBackendUrl)
+      .then(res => {
+        setNotes(res.data)
+      })
   },[])
 
   console.log('render', notes.length, 'notes');
