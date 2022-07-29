@@ -49,7 +49,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get(herokuBackendUrl)
+      .get("/api/notes")
       .then(res => {
         setNotes(res.data)
       })
