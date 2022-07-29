@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import phonebookServices from "./services/persons";
 
-const gitpodBackendUrl =
-  "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
-
 const Notification = ({message, type}) => {
   const successStyle = {
     color: 'green',
@@ -198,8 +195,8 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
+
   useEffect(() => {
-    console.log("loading...");
     phonebookServices
       .getAll()
       .then((receivedPersons) => setPersons(receivedPersons));
