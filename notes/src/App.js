@@ -45,6 +45,10 @@ const LoginForm = ({
         username,
         password,
       });
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      )
+      noteService.setToken(user.token)
       setUser(user);
       setUsername("");
       setPassword("");
@@ -110,6 +114,20 @@ const NoteForm = ({notes, newNote, setNotes, setNewNote}) => {
   );
 }
 
+const LogoutButton = ({setUser}) => {
+
+  const handleLogout = (event) => {
+    window.localStorage.removeItem('loggedNoteappUser')
+    setUser('')
+  }
+
+  return (
+    <div>
+      <button onClick={handleLogout} >logout</button>
+    </div>
+  )
+}
+
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
@@ -118,13 +136,6 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-
-  const gitpodBackendUrl =
-    "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
-
-  const notesBackend =
-    "https://3001-twbluenaxel-fso2022part-rlkoupq6edq.ws-us54.gitpod.io/api/notes";
-  const herokuBackendUrl = "https://stormy-plateau-56722.herokuapp.com/";
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
   // console.log("Notes to show:  ", notesToShow)
@@ -135,10 +146,18 @@ const App = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
+
   console.log("render", notes.length, "notes");
 
   
-
   
 
   const toggleImportanceOf = (id) => {
@@ -186,6 +205,7 @@ const App = () => {
         setNotes={setNotes}
         setNewNote={setNewNote}
         />}
+        <LogoutButton setUser={setUser} />
       </div>
       }
       <div>
