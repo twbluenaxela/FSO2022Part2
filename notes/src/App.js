@@ -1,131 +1,211 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import Note from './components/Note'
-import noteService from './services/notes'
-import './index.css'
+import axios from "axios";
+import { useState, useEffect } from "react";
+import Note from "./components/Note";
+import noteService from "./services/notes";
+import loginService from "./services/login";
+import "./index.css";
 
-const Notification = ({message}) => {
-  if(message === null){
-    return null
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null;
   }
 
-  return (
-    <div className='error'>
-      {message}
-    </div>
-  )
-}
+  return <div className="error">{message}</div>;
+};
 
 const Footer = () => {
   const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  }
+    color: "green",
+    fontStyle: "italic",
+    fontSize: 16,
+  };
   return (
     <div style={footerStyle}>
       <br />
-      <em>Note app, Department of Computer Science, University of Helsinki 2022</em>
+      <em>
+        Note app, Department of Computer Science, University of Helsinki 2022
+      </em>
     </div>
-  )
-}
+  );
+};
 
+const LoginForm = ({
+  username, 
+  setUsername, 
+  password, 
+  setPassword,
+  setUser,
+  setErrorMessage}) => {
+  
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    console.log("logging in with", username, password);
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+      setUser(user);
+      setUsername("");
+      setPassword("");
+    } catch (exception) {
+      setErrorMessage("Wrong credentials");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
 
-const App = () => {
-  const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState('some error happened...')
+  return (
+  <form onSubmit={handleLogin}>
+    <div>
+      username
+      <input
+        type="text"
+        value={username}
+        name="Username"
+        onChange={({ target }) => setUsername(target.value)}
+      />
+    </div>
+    <div>
+      password
+      <input
+        type="password"
+        value={password}
+        name="Password"
+        onChange={({ target }) => setPassword(target.value)}
+      />
+    </div>
+    <button type="submit">login</button>
+  </form>
+)}
 
-  const gitpodBackendUrl =
-  "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
+const NoteForm = ({notes, newNote, setNotes, setNewNote}) => {
 
-  const notesBackend = "https://3001-twbluenaxel-fso2022part-rlkoupq6edq.ws-us54.gitpod.io/api/notes"
-  const herokuBackendUrl = "https://stormy-plateau-56722.herokuapp.com/"
+  const handleNoteChange = (event) => {
+    console.log(event.target.value);
+    setNewNote(event.target.value);
+  };
 
-  const notesToShow = showAll ? notes : notes.filter(note => note.important)
-  // console.log("Notes to show:  ", notesToShow)
-
-
-  useEffect(() => {
-    axios
-      .get("/api/notes")
-      .then(res => {
-        setNotes(res.data)
-      })
-  },[])
-
-  console.log('render', notes.length, 'notes');
-
-  const addNote = event => {
+  const addNote = (event) => {
     event.preventDefault();
     // console.log('button clicked', event.target);
     const noteObject = {
       content: newNote,
       date: new Date().toISOString(),
       important: Math.random() < 0.5,
-    }
+    };
 
-    noteService
-    .create(noteObject)
-    .then(returnedNote => {
-      setNotes(notes.concat(returnedNote))
-      setNewNote('')
-    })
-  }
+    noteService.create(noteObject).then((returnedNote) => {
+      setNotes(notes.concat(returnedNote));
+      setNewNote("");
+    });
+  };
 
-  const toggleImportanceOf = id => {
+  return (
+    <form onSubmit={addNote}>
+      <input value={newNote} onChange={handleNoteChange} />
+      <button type="submit">save</button>
+    </form>
+  );
+}
+
+const App = () => {
+  const [notes, setNotes] = useState([]);
+  const [newNote, setNewNote] = useState("");
+  const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("some error happened...");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
+
+  const gitpodBackendUrl =
+    "https://3001-twbluenaxel-fso2022part-q6p1ytmwo86.ws-us54.gitpod.io";
+
+  const notesBackend =
+    "https://3001-twbluenaxel-fso2022part-rlkoupq6edq.ws-us54.gitpod.io/api/notes";
+  const herokuBackendUrl = "https://stormy-plateau-56722.herokuapp.com/";
+
+  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
+  // console.log("Notes to show:  ", notesToShow)
+
+  useEffect(() => {
+    axios.get("/api/notes").then((res) => {
+      setNotes(res.data);
+    });
+  }, []);
+
+  console.log("render", notes.length, "notes");
+
+  
+
+  
+
+  const toggleImportanceOf = (id) => {
     // const url = `${gitpodBackendUrl}/notes/${id}`
-    const note = notes.find(n => n.id === id)
-    const changedNote = { ... note, important: !note.important}
+    const note = notes.find((n) => n.id === id);
+    const changedNote = { ...note, important: !note.important };
     noteService
-    .update(id, changedNote)
-    .then(returnedNote => {
-      setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-    })
-    .catch(error => {
-      setErrorMessage(
-        `Note '${note.content}' was already removed from server`
-      )
-      setTimeout(() => {
-        setErrorMessage(null)
+      .update(id, changedNote)
+      .then((returnedNote) => {
+        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
+      })
+      .catch((error) => {
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
+        );
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+        setNotes(notes.filter((n) => n.id !== id));
+      });
+  };
 
-      }, 5000)
-      setNotes(notes.filter(n => n.id !== id))
-    })
-  }
+  
 
-  const handleNoteChange = (event) => {
-    console.log(event.target.value);
-    setNewNote(event.target.value);
-  }
+  
 
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
+      {errorMessage ? "" : <Notification message={errorMessage} />}
+      {user === null ?
+      <LoginForm 
+      username={username} 
+      setUsername={setUsername}
+      password={password}
+      setPassword={setPassword}
+      setUser={setUser}
+      setErrorMessage={setErrorMessage}
+      /> :
       <div>
-        <button onClick={() => setShowAll(!showAll)} >
-          show {showAll ? 'important' : 'all'}
+        <p>{user.name} logged-in</p>
+        {<NoteForm 
+        notes={notes}
+        newNote={newNote}
+        setNotes={setNotes}
+        setNewNote={setNewNote}
+        />}
+      </div>
+      }
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? "important" : "all"}
         </button>
       </div>
       <ul>
-      {notesToShow.map(note =>
+        {notesToShow.map((note) => (
           <Note
-          key={note.id} 
-          note={note} 
-          toggleImportance={() => toggleImportanceOf(note.id)} />
-        )}
+            key={note.id}
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
+          />
+        ))}
       </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote}
-        onChange={handleNoteChange}
-        />
-        <button type="submit">save</button>
-      </form>
+
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
