@@ -98,20 +98,12 @@ const App = () => {
   };
 
   const addNote = (noteObject) => {
-    // console.log('button clicked', event.target);
-    // const noteObject = {
-    //   content: newNote,
-    //   date: new Date().toISOString(),
-    //   important: Math.random() < 0.5,
-    // };
-    noteFormRef.current.toggleVisibility()
     noteService
       .create(noteObject)
-      .then((returnedNote) => {
-        setNotes(notes.concat(returnedNote));
-      setNewNote("");
-    });
-  };
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+      })
+  }
   
 
   const toggleImportanceOf = (id) => {
@@ -174,9 +166,7 @@ const App = () => {
         <p>{user.name} logged in</p>
         <Toggleable buttonLabel='new note' ref={noteFormRef}>
         <NoteForm 
-          onSubmit={addNote}
-          value={newNote}
-          handleChange={handleNoteChange}
+        createNote={addNote}
         />
       </Toggleable>
       </div>
