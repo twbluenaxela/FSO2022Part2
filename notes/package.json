@@ -45,7 +45,8 @@
   "devDependencies": {
     "json-server": "^0.17.0",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "eslint-plugin-jest": "^26.8.4"
   },
   "resolutions": {
     "mini-css-extract-plugin": "2.4.5"

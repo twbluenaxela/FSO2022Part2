@@ -21,6 +21,8 @@ const Toggleable = forwardRef ((props, ref) => {
       buttonLabel: PropTypes.string.isRequired
     }
 
+    Toggleable.displayName = 'Toggleable'
+
     return (
         <div>
         <div style={hideWhenVisible}>
