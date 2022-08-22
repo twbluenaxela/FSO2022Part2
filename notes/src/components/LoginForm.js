@@ -24,12 +24,8 @@ const LoginForm = ({
           username
           <input
             type="text"
-<<<<<<< HEAD
-            value={props.username}
             id="username"
-=======
             value={username}
->>>>>>> 52bcb433e3aebbf50c5f50ea49607dc8528ab17c
             name="Username"
             onChange={handleUsernameChange}
           />
@@ -38,12 +34,8 @@ const LoginForm = ({
           password
           <input
             type="password"
-<<<<<<< HEAD
             id='password'
-            value={props.password}
-=======
             value={password}
->>>>>>> 52bcb433e3aebbf50c5f50ea49607dc8528ab17c
             name="Password"
             onChange={handlePasswordChange}
           />
