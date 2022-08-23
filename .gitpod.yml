@@ -8,7 +8,16 @@ additionalRepositories:
     # checkoutLocation is relative to /workspaces
     checkoutLocation: backend
 
+image: 
+  file: .gitpod.Dockerfile
+
 tasks:
+  - init: |
+      touch /tmp/.npm-lock
+      npm install
+      rm /tmp/.npm-lock
+    command: npm run dev
+
   - name: backend
     before: |
       cd ../backend
@@ -22,9 +31,10 @@ tasks:
       cd notes
     init: |
       npm install
-      npm run build
     command: | 
       npm run start
+  - init: sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+    command: npm run cypress:open
 
 
 
