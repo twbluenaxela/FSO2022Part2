@@ -25,10 +25,10 @@ tasks:
       cd notes
     init: |
       npm install
+      ./node_modules/.bin/cypress install
     command: | 
       npm run start
-  - init: sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
-    command: npm run cypress:open
+      npm run cypress:open
 
 
 
