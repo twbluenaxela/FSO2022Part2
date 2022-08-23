@@ -3,6 +3,8 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 # example .gitpod.yml from https://github.com/gitpod-io/demo-multi-repo-frontend
+#fix cypress issue on gitpod here
+#https://github.com/cypress-io/cypress/issues/2610#issuecomment-996683705
 additionalRepositories:
   - url: https://github.com/twbluenaxela/FSO2022Part3
     # checkoutLocation is relative to /workspaces
