@@ -19,7 +19,7 @@ tasks:
 
   - name: frontend
     before: |
-      cd ../notes
+      cd notes
     init: |
       npm install
       npm run build
