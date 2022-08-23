@@ -18,6 +18,8 @@ tasks:
       npm run dev
 
   - name: frontend
+    before: |
+      cd ../notes
     init: |
       npm install
       npm run build
