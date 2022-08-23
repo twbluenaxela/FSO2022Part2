@@ -20,7 +20,9 @@
     "server": "json-server -p3001 --watch db.json",
     "cypress:open": "cypress open",
     "cy:run": "./node_modules/.bin/cypress install && ./node_modules/.bin/cypress run",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "dev:server": "cd ../../FSO2022Part3 && npm run dev",
+    "dev:test": "cd ../../FSO2022Part3 && npm run dev:test"
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
