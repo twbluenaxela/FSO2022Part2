@@ -14,6 +14,14 @@ describe('Note app', () => {
     cy.contains('Note app, Department of Computer Science, University of Helsinki 2022')
   })
 
+  it.only('login fails with wrong password', function () {
+    cy.contains('login').click()
+    cy.get('#username').type('mluukai')
+    cy.get('#password').type('wrong')
+    cy.get('#login-button').click()
+
+    cy.contains('wrong credentials')
+  })
   // it('front page contains random text', function() {
   //     cy.visit('http://localhost:3000')
   //     cy.contains('wtf is this app?')

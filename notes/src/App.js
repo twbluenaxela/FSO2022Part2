@@ -64,7 +64,7 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState('some error happened...')
+  const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -151,7 +151,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
-      {errorMessage ? '' : <Notification message={errorMessage} />}
+      <Notification message={errorMessage} />
       {user === null ?
         <Toggleable buttonLabel='login'>
           <LoginForm
