@@ -9,26 +9,26 @@ describe('Note app', () => {
     cy.request('POST', 'http://localhost:3001/api/users/', user)
     cy.visit('http://localhost:3000')
   })
-  it('front page can be opened', () => {
-    cy.contains('Notes')
-    cy.contains('Note app, Department of Computer Science, University of Helsinki 2022')
-  })
-  it('login form can be opened', function() {
-    cy.contains('login').click()
-    cy.get('#username').type('tudou')
-    cy.get('#password').type('tudou')
-    cy.get('#login-button').click()
+//   it('front page can be opened', () => {
+//     cy.contains('Notes')
+//     cy.contains('Note app, Department of Computer Science, University of Helsinki 2022')
+//   })
+//   it('login form can be opened', function() {
+//     cy.contains('login').click()
+//     cy.get('#username').type('tudou')
+//     cy.get('#password').type('tudou')
+//     cy.get('#login-button').click()
 
-    cy.contains('Tudou logged in')
-})
-  it('user can login', function() {
-    cy.contains('login').click()
-    cy.get('#username').type('tudou')
-    cy.get('#password').type('tudou')
-    cy.get('#login-button').click()
+//     cy.contains('Tudou logged in')
+// })
+//   it('user can login', function() {
+//     cy.contains('login').click()
+//     cy.get('#username').type('tudou')
+//     cy.get('#password').type('tudou')
+//     cy.get('#login-button').click()
 
-    cy.contains('Tudou logged in')
-  })
+//     cy.contains('Tudou logged in')
+//   })
 
 
   // it('login fails with wrong password', function () {
@@ -76,12 +76,22 @@ describe('Note app', () => {
         })
       })
       it('it can be made important', function() {
+        cy.contains('another note cypress').parent().find('button').as('theButton')
+        cy.get('@theButton').click()
         cy.contains('another note cypress')
-          .contains('make important')
-          .click()
-
-        cy.contains('another note cypress')
-          .contains('make not important')
+        cy.get('@theButton').should('contain', 'make not important')
+      })
+    })
+    describe('and several notes exist', function () {
+      beforeEach(function () {
+        cy.createNote({ content: 'first note', important: false })
+        cy.createNote({ content: 'second note', important: false })
+        cy.createNote({ content: 'third note', important: false })
+      })
+      it('one of those can be made important', function() {
+        cy.contains('second note').parent().find('button').as('theButton')
+        cy.get('@theButton').click()
+        cy.get('@theButton').should('contain', 'make not important')
       })
     })
   })
